@@ -11,6 +11,7 @@ This plugin allows users to log in with an E-Mail address and shortens the passw
 == Description ==
 
 This plugin allows users to log in with an E-Mail address and shortens the password recovery process to:
+
 * User clicks "forgot password"
 * User enters their E-Mail address and submits.
 * User gets and E-Mail with a link

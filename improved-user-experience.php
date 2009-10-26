@@ -35,8 +35,11 @@ class improvedUserExperience
 			add_action('password_reset', array($this, 'password_reset'), null, 2);
 		}
 
-		if ( !empty($_GET['message']) && $_GET['message'] == 'resetpass' && defined('IS_PROFILE_PAGE') && IS_PROFILE_PAGE ) {
-			add_action('admin_notices', array($this, 'warning'));
+		if ( !empty($_GET['message']) && $_GET['message'] == 'resetpass' ) {
+			add_action('iue-password-message', array($this, 'warning'));
+			if ( defined('IS_PROFILE_PAGE') && IS_PROFILE_PAGE ) {
+				add_action('admin_notices', array($this, 'warning'));
+			}
 		}
 	}
 
