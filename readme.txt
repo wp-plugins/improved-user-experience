@@ -1,16 +1,17 @@
 === Improved User Experience ===
 Contributors: aaroncampbell
-Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=paypal%40xavisys%2ecom&item_name=Improved%20User%20Experience&no_shipping=0&no_note=1&tax=0&currency_code=USD&lc=US&bn=PP%2dDonationsBF&charset=UTF%2d8
-Tags: twitter, widget, feed
+Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=10147595
+Tags: user, login, lost password
 Requires at least: 2.6
 Tested up to: 2.9
-Stable tag: 1.0.0
+Stable tag: 1.1.0
 
 This plugin allows users to log in with an E-Mail address and shortens the password recovery process. Requires PHP5.
 
 == Description ==
 
 This plugin allows users to log in with an E-Mail address and shortens the password recovery process to:
+
 * User clicks "forgot password"
 * User enters their E-Mail address and submits.
 * User gets and E-Mail with a link
@@ -31,6 +32,9 @@ This plugin allows users to log in with an E-Mail address and shortens the passw
 I personally like the default password reset process in WordPress, but I have a lot of clients that think it's too many steps.  This method is faster, easier, and still secure.
 
 == Changelog ==
+
+= 1.1.0 =
+* Upgraded to use the new <a href="http://xavisys.com/xavisys-wordpress-plugin-framework/">Xavisys WordPress Plugin Framework</a>
 
 = 1.0.0 =
 * Released to wordpress.org repository
