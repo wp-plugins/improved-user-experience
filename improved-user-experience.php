@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Improved User Experience
- * Plugin URI: http://xavisys.com/2009/10/improved-user-experience-wordpress-plugin/
+ * Plugin URI: http://xavisys.com/wordpress-plugins/improved-user-experience/
  * Description: Better lost password handling as well as control over what contact information in the user profiles
  * Version: 1.1.0
  * Author: Aaron D. Campbell
@@ -73,33 +73,33 @@ class improvedUserExperience extends XavisysPlugin {
 				<table class="form-table">
 					<tr valign="top">
 						<th scope="row">
-							<?php _e("E-Mail Login:", 'improved-user-experience'); ?>
+							<?php _e("E-Mail Login:", $this->_slug); ?>
 						</th>
 						<td>
 							<input name="iue[email_login]" id="iue_email_login_no" type="radio" value="no"<?php checked('no', $this->_settings['iue']['email_login']) ?>>
 							<label for="iue_email_login_no">
-								<?php _e("Require username to login (normal WordPress functionality)",'improved-user-experience');?>
+								<?php _e("Require username to login (normal WordPress functionality)", $this->_slug);?>
 							</label>
 							<br />
 							<input name="iue[email_login]" id="iue_email_login_yes" type="radio" value="yes"<?php checked('yes', $this->_settings['iue']['email_login']) ?>>
 							<label for="iue_email_login_yes">
-								<?php _e("Allow users to login using E-Mail address or username",'improved-user-experience');?>
+								<?php _e("Allow users to login using E-Mail address or username", $this->_slug);?>
 							</label>
 						</td>
 					</tr>
 					<tr valign="top">
 						<th scope="row">
-							<?php _e("Lost Password:", 'improved-user-experience'); ?>
+							<?php _e("Lost Password:", $this->_slug); ?>
 						</th>
 						<td>
 							<input name="iue[shortened_pw_reset]" id="iue_shortened_pw_reset_no" type="radio" value="no"<?php checked('no', $this->_settings['iue']['shortened_pw_reset']) ?>>
 							<label for="iue_shortened_pw_reset_no">
-								<?php _e("Use the WordPress lost password procedure.",'improved-user-experience');?>
+								<?php _e("Use the WordPress lost password procedure.", $this->_slug);?>
 							</label>
 							<br />
 							<input name="iue[shortened_pw_reset]" id="iue_shortened_pw_reset_yes" type="radio" value="yes"<?php checked('yes', $this->_settings['iue']['shortened_pw_reset']) ?>>
 							<label for="iue_shortened_pw_reset_yes">
-								<?php _e("Use the short lost password procedure.",'improved-user-experience');?>
+								<?php _e("Use the short lost password procedure.", $this->_slug);?>
 							</label>
 							<br />
 							<br />
@@ -108,11 +108,11 @@ class improvedUserExperience extends XavisysPlugin {
 					</tr>
 					<tr valign="top">
 						<th scope="row">
-							<label for="iue_change_pw_page"><?php _e("Change Password Page:",'improved-user-experience'); ?></label>
+							<label for="iue_change_pw_page"><?php _e("Change Password Page:", $this->_slug); ?></label>
 						</th>
 						<td>
 							<input id="iue_change_pw_page" name="iue[change_pw_page]" type="text" class="regular-text code" value="<?php echo attribute_escape($this->_settings['iue']['change_pw_page']); ?>" size="50" /><br />
-							<span class="setting-description"><?php _e("If you have a custom page for users to change their password, enter it here and the user will be directed there instead of the default profile page.", 'improved-user-experience'); ?></span>
+							<span class="setting-description"><?php _e("If you have a custom page for users to change their password, enter it here and the user will be directed there instead of the default profile page.", $this->_slug); ?></span>
 						</td>
 					</tr>
 				</table>
@@ -154,7 +154,7 @@ class improvedUserExperience extends XavisysPlugin {
      */
     public function warning() {
         echo "<div class='updated'><p><strong>"
-            .__('Please update your password.', 'improved-user-experience')
+            .__('Please update your password.', $this->_slug)
             ."</strong></p></div>";
     }
 

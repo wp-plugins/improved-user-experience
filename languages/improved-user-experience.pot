@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/improved-user-experience\n"
-"POT-Creation-Date: 2009-10-26 03:48+0000\n"
+"POT-Creation-Date: 2009-12-01 06:55+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,49 +16,41 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: improved-user-experience.php:83
-msgid "Please update your password."
-msgstr ""
-
 #. #-#-#-#-#  plugin.pot (PACKAGE VERSION)  #-#-#-#-#
 #. Plugin Name of an extension
-#: improved-user-experience.php:94 improved-user-experience.php:112
+#: improved-user-experience.php:22 improved-user-experience.php:23
 msgid "Improved User Experience"
 msgstr ""
 
-#: improved-user-experience.php:94
-msgid "User Experience"
+#: improved-user-experience.php:65
+msgid "General Settings"
 msgstr ""
 
-#: improved-user-experience.php:113 improved-user-experience.php:201
-msgid "Settings"
-msgstr ""
-
-#: improved-user-experience.php:132
+#: improved-user-experience.php:76
 msgid "E-Mail Login:"
 msgstr ""
 
-#: improved-user-experience.php:137
+#: improved-user-experience.php:81
 msgid "Require username to login (normal WordPress functionality)"
 msgstr ""
 
-#: improved-user-experience.php:142
+#: improved-user-experience.php:86
 msgid "Allow users to login using E-Mail address or username"
 msgstr ""
 
-#: improved-user-experience.php:148
+#: improved-user-experience.php:92
 msgid "Lost Password:"
 msgstr ""
 
-#: improved-user-experience.php:153
+#: improved-user-experience.php:97
 msgid "Use the WordPress lost password procedure."
 msgstr ""
 
-#: improved-user-experience.php:158
+#: improved-user-experience.php:102
 msgid "Use the short lost password procedure."
 msgstr ""
 
-#: improved-user-experience.php:162
+#: improved-user-experience.php:106
 msgid ""
 "The WordPress lost password process requires the user to request a password "
 "reset, check their E-Mail, follow a link in the E-Mail, check their E-Mail "
@@ -69,18 +61,65 @@ msgid ""
 "their password."
 msgstr ""
 
-#: improved-user-experience.php:167
+#: improved-user-experience.php:111
 msgid "Change Password Page:"
 msgstr ""
 
-#: improved-user-experience.php:171
+#: improved-user-experience.php:115
 msgid ""
 "If you have a custom page for users to change their password, enter it here "
 "and the user will be directed there instead of the default profile page."
 msgstr ""
 
-#: improved-user-experience.php:176
+#: improved-user-experience.php:157
+msgid "Please update your password."
+msgstr ""
+
+#: xavisys-plugin-framework.php:190
 msgid "Update Options &raquo;"
+msgstr ""
+
+#: xavisys-plugin-framework.php:226
+msgid "Support Forum"
+msgstr ""
+
+#: xavisys-plugin-framework.php:237
+msgid "Settings"
+msgstr ""
+
+#: xavisys-plugin-framework.php:254
+msgid "Like this Plugin?"
+msgstr ""
+
+#: xavisys-plugin-framework.php:255
+msgid "Need Support?"
+msgstr ""
+
+#: xavisys-plugin-framework.php:256
+msgid "Latest news from Xavisys"
+msgstr ""
+
+#: xavisys-plugin-framework.php:261
+msgid "Then please do any or all of the following:"
+msgstr ""
+
+#: xavisys-plugin-framework.php:266
+msgid "Link to it so others can find out about it."
+msgstr ""
+
+#: xavisys-plugin-framework.php:271
+msgid "Give it a good rating on WordPress.org."
+msgstr ""
+
+#: xavisys-plugin-framework.php:276
+msgid "Donate to show your appreciation."
+msgstr ""
+
+#: xavisys-plugin-framework.php:284
+#, php-format
+msgid ""
+"If you have any problems with this plugin or ideas for improvements or "
+"enhancements, please use the <a href=\"%s\">Xavisys Support Forums</a>."
 msgstr ""
 
 #. Plugin URI of an extension
