@@ -3,36 +3,44 @@
  * Plugin Name: Improved User Experience
  * Plugin URI: http://xavisys.com/2009/10/improved-user-experience-wordpress-plugin/
  * Description: Better lost password handling as well as control over what contact information in the user profiles
- * Version: 1.0.0
+ * Version: 1.1.0
  * Author: Aaron D. Campbell
  * Author URI: http://xavisys.com/
  * Text Domain: improved-user-experience
  */
 
-class improvedUserExperience
-{
+require_once('xavisys-plugin-framework.php');
+class improvedUserExperience extends XavisysPlugin {
 	/**
-	 * @var array Plugin settings
+	 * @var efficientRelatedPosts - Static property to hold our singleton instance
 	 */
-	private $_settings;
+	static $instance = false;
 
-	public function __construct() {
-		$this->_getSettings();
+	protected function _init() {
+		$this->_hook = 'improvedUserExperience';
+		$this->_file = plugin_basename( __FILE__ );
+		$this->_pageTitle = __( 'Improved User Experience', $this->_slug );
+		$this->_menuTitle = __( 'Improved User Experience', $this->_slug );
+		$this->_accessLevel = 'manage_options';
+		$this->_optionGroup = 'iue-options';
+		$this->_optionNames = array('iue');
+		$this->_optionCallbacks = array();
+		$this->_slug = 'improved-user-experience';
+		$this->_paypalButtonId = '10147595';
 
 		/**
 		 * Add filters and actions
 		 */
-		add_filter( 'init', array( $this, 'init_locale') );
-		add_action( 'admin_menu', array( $this, 'admin_menu'));
-		add_action( 'admin_init', array( $this, 'registerOptions' ) );
-		add_filter( 'plugin_action_links', array( $this, 'addSettingLink' ), null, 2 );
+		add_filter( $this->_slug .'-opt-iue', array( $this, 'filterSettings' ) );
+	}
 
-		if ( $this->_settings['email_login'] == 'yes' ) {
-			add_action('wp_authenticate', array($this, 'allow_email_login'), 0, 2);
+	protected function _postSettingsInit() {
+		if ( $this->_settings['iue']['email_login'] == 'yes' ) {
+			add_action('wp_authenticate', array( $this, 'allow_email_login' ), 0, 2);
 		}
 
-		if ( $this->_settings['shortened_pw_reset'] == 'yes' ) {
-			add_action('password_reset', array($this, 'password_reset'), null, 2);
+		if ( $this->_settings['iue']['shortened_pw_reset'] == 'yes' ) {
+			add_action('password_reset', array( $this, 'password_reset' ), null, 2);
 		}
 
 		if ( !empty($_GET['message']) && $_GET['message'] == 'resetpass' ) {
@@ -43,91 +51,24 @@ class improvedUserExperience
 		}
 	}
 
-	public function init_locale() {
-		$lang_dir = basename(dirname(__FILE__)) . '/languages';
-		load_plugin_textdomain('improved-user-experience', 'wp-content/plugins/' . $lang_dir, $lang_dir);
-	}
-
 	/**
-	 * Function to allow login with E-Mail address as well as username.
-	 *
-	 * @param string &user - Username
-	 * @param string &pass - Password
-	 *
-	 * @return void
+	 * Function to instantiate our class and make it a singleton
 	 */
-	public function allow_email_login($user, $pass) {
-		global $wpdb;
-		if (is_email($user)) {
-			$usernameQuery = $wpdb->prepare("SELECT `user_login` FROM `{$wpdb->users}` WHERE user_email = %s", $user);
-			$username = $wpdb->get_var($usernameQuery);
-			if (!empty($username)) {
-				$user = $username;
-			}
+	public static function getInstance() {
+		if ( !self::$instance ) {
+			self::$instance = new self;
 		}
-		return;
+		return self::$instance;
 	}
 
-	public function password_reset( $user, $new_pass ) {
-		wp_set_auth_cookie($user->ID);
-		if ( stristr($this->_settings['change_pw_page'], 'message=resetpass') === false ) {
-			$this->_settings['change_pw_page'] .= ( strpos($this->_settings['change_pw_page'], '?') === false )? '?':'&';
-			$this->_settings['change_pw_page'] .= 'message=resetpass';
-		}
-		wp_safe_redirect($this->_settings['change_pw_page']);
-		exit;
-	}
-
-    /**
-     * Echo a warning into the admin section, if needed
-     */
-    public function warning() {
-        echo "<div class='updated'><p><strong>"
-            .__('Please update your password.', 'improved-user-experience')
-            ."</strong></p></div>";
-    }
-
-	/**
-	 * This adds the options page for this plugin to the Options page
-	 *
-	 * @access public
-	 */
-	public function admin_menu() {
-		// We make sure they can "create_users" which should mean they are an administrator.
-		add_options_page(__('Improved User Experience', 'improved-user-experience'), __('User Experience', 'improved-user-experience'), 'create_users', 'improved-user-experience', array($this, 'options'));
-	}
-
-	public function registerOptions() {
-		/**
-		 * @todo Remove once all sites are 2.7+
-		 */
-		if ( function_exists('register_setting') ) {
-			register_setting( 'iue-options', 'iue' );
-		}
+	public function addOptionsMetaBoxes() {
+		add_meta_box( $this->_slug . '-general-settings', __('General Settings', $this->_slug), array($this, 'generalSettingsMetaBox'), 'xavisys-' . $this->_slug, 'main');
 	}
 
 	/**
 	 * This is used to display the options page for this plugin
 	 */
-	public function options() {
-?>
-		<div class="wrap">
-			<h2><?php _e('Improved User Experience', 'improved-user-experience'); ?></h2>
-			<h3><?php _e('Settings', 'improved-user-experience'); ?></h3>
-			<form action="options.php" method="post">
-<?php
-		/**
-		 * @todo Use only settings_fields once all sites are 2.7+
-		 */
-		if ( function_exists('settings_fields') ) {
-			settings_fields( 'iue-options' );
-		} else {
-			wp_nonce_field('update-options');
-?>
-			<input type="hidden" name="action" value="update" />
-			<input type="hidden" name="page_options" value="iue" />
-<?php
-		}
+	public function generalSettingsMetaBox() {
 ?>
 				<table class="form-table">
 					<tr valign="top">
@@ -135,12 +76,12 @@ class improvedUserExperience
 							<?php _e("E-Mail Login:", 'improved-user-experience'); ?>
 						</th>
 						<td>
-							<input name="iue[email_login]" id="iue_email_login_no" type="radio" value="no"<?php checked('no', $this->_settings['email_login']) ?>>
+							<input name="iue[email_login]" id="iue_email_login_no" type="radio" value="no"<?php checked('no', $this->_settings['iue']['email_login']) ?>>
 							<label for="iue_email_login_no">
 								<?php _e("Require username to login (normal WordPress functionality)",'improved-user-experience');?>
 							</label>
 							<br />
-							<input name="iue[email_login]" id="iue_email_login_yes" type="radio" value="yes"<?php checked('yes', $this->_settings['email_login']) ?>>
+							<input name="iue[email_login]" id="iue_email_login_yes" type="radio" value="yes"<?php checked('yes', $this->_settings['iue']['email_login']) ?>>
 							<label for="iue_email_login_yes">
 								<?php _e("Allow users to login using E-Mail address or username",'improved-user-experience');?>
 							</label>
@@ -151,12 +92,12 @@ class improvedUserExperience
 							<?php _e("Lost Password:", 'improved-user-experience'); ?>
 						</th>
 						<td>
-							<input name="iue[shortened_pw_reset]" id="iue_shortened_pw_reset_no" type="radio" value="no"<?php checked('no', $this->_settings['shortened_pw_reset']) ?>>
+							<input name="iue[shortened_pw_reset]" id="iue_shortened_pw_reset_no" type="radio" value="no"<?php checked('no', $this->_settings['iue']['shortened_pw_reset']) ?>>
 							<label for="iue_shortened_pw_reset_no">
 								<?php _e("Use the WordPress lost password procedure.",'improved-user-experience');?>
 							</label>
 							<br />
-							<input name="iue[shortened_pw_reset]" id="iue_shortened_pw_reset_yes" type="radio" value="yes"<?php checked('yes', $this->_settings['shortened_pw_reset']) ?>>
+							<input name="iue[shortened_pw_reset]" id="iue_shortened_pw_reset_yes" type="radio" value="yes"<?php checked('yes', $this->_settings['iue']['shortened_pw_reset']) ?>>
 							<label for="iue_shortened_pw_reset_yes">
 								<?php _e("Use the short lost password procedure.",'improved-user-experience');?>
 							</label>
@@ -170,63 +111,64 @@ class improvedUserExperience
 							<label for="iue_change_pw_page"><?php _e("Change Password Page:",'improved-user-experience'); ?></label>
 						</th>
 						<td>
-							<input id="iue_change_pw_page" name="iue[change_pw_page]" type="text" class="regular-text code" value="<?php echo attribute_escape($this->_settings['change_pw_page']); ?>" size="50" /><br />
+							<input id="iue_change_pw_page" name="iue[change_pw_page]" type="text" class="regular-text code" value="<?php echo attribute_escape($this->_settings['iue']['change_pw_page']); ?>" size="50" /><br />
 							<span class="setting-description"><?php _e("If you have a custom page for users to change their password, enter it here and the user will be directed there instead of the default profile page.", 'improved-user-experience'); ?></span>
 						</td>
 					</tr>
 				</table>
-				<p class="submit">
-					<input type="submit" name="Submit" value="<?php _e('Update Options &raquo;', 'improved-user-experience'); ?>" />
-				</p>
-			</form>
-		</div>
 <?php
 	}
 
-	private function _getSettings() {
+	/**
+	 * Function to allow login with E-Mail address as well as username.
+	 *
+	 * @param string &user - Username
+	 * @param string &pass - Password
+	 *
+	 * @return void
+	 */
+	public function allow_email_login($user, $pass) {
+		global $wpdb;
+		if ( is_email($user) ) {
+			$usernameQuery = $wpdb->prepare("SELECT `user_login` FROM `{$wpdb->users}` WHERE user_email = %s", $user);
+			$username = $wpdb->get_var($usernameQuery);
+			if (!empty($username)) {
+				$user = $username;
+			}
+		}
+		return;
+	}
+
+	public function password_reset( $user, $new_pass ) {
+		wp_set_auth_cookie($user->ID);
+		if ( stristr($this->_settings['iue']['change_pw_page'], 'message=resetpass') === false ) {
+			$this->_settings['iue']['change_pw_page'] .= ( strpos($this->_settings['iue']['change_pw_page'], '?') === false )? '?':'&';
+			$this->_settings['iue']['change_pw_page'] .= 'message=resetpass';
+		}
+		wp_safe_redirect($this->_settings['iue']['change_pw_page']);
+		exit;
+	}
+
+    /**
+     * Echo a warning into the admin section, if needed
+     */
+    public function warning() {
+        echo "<div class='updated'><p><strong>"
+            .__('Please update your password.', 'improved-user-experience')
+            ."</strong></p></div>";
+    }
+
+	public function filterSettings($settings) {
 		$defaults = array(
 			'email_login'			=> 'yes',
 			'shortened_pw_reset'	=> 'yes',
 			'change_pw_page'		=> 'wp-admin/profile.php',
 		);
-		$this->_settings = get_option('iue');
-		$this->_settings = wp_parse_args($this->_settings, $defaults);
+		$settings = wp_parse_args($settings, $defaults);
 
-		/*
-		$this->_settings['max_relations_stored'] = intval($this->_settings['max_relations_stored']);
-		$this->_settings['num_to_display'] = intval($this->_settings['num_to_display']);
-		*/
-	}
-
-	public function addSettingLink( $links, $file ){
-		if ( $file == plugin_basename(__FILE__) ) {
-			// Add settings link to our plugin
-			$link = '<a href="options-general.php?page=improved-user-experience">' . __('Settings', 'improved-user-experience') . '</a>';
-			array_unshift( $links, $link );
-		}
-		return $links;
+		return $settings;
 	}
 }
 
 // Instantiate our class
-$improvedUserExperience = new improvedUserExperience();
-
-/**
- * For use with debugging
- */
-if ( !function_exists('dump') ) {
-	function dump($v, $title = '', $echo = true) {
-		if (!empty($title)) {
-			$title = '<h4>' . htmlentities($title) . '</h4>';
-		}
-		ob_start();
-		var_dump($v);
-		$v = ob_get_clean();
-		$v = $title . '<pre>' . htmlentities($v) . '</pre>';
-		if ( $echo ) {
-			echo $v;
-		} else {
-			return $v;
-		}
-	}
-}
+$improvedUserExperience = improvedUserExperience::getInstance();
