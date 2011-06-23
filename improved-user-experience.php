@@ -3,7 +3,7 @@
  * Plugin Name: Improved User Experience
  * Plugin URI: http://xavisys.com/wordpress-plugins/improved-user-experience/
  * Description: Better lost password handling as well as control over what contact information in the user profiles
- * Version: 1.1.0
+ * Version: 1.1.1
  * Author: Aaron D. Campbell
  * Author URI: http://xavisys.com/
  * Text Domain: improved-user-experience
@@ -41,6 +41,7 @@ class improvedUserExperience extends XavisysPlugin {
 
 		if ( $this->_settings['iue']['shortened_pw_reset'] == 'yes' ) {
 			add_action('password_reset', array( $this, 'password_reset' ), null, 2);
+			add_action('login_form_resetpass', array( $this, 'password_reset' ), null, 2);
 		}
 
 		if ( !empty($_GET['message']) && $_GET['message'] == 'resetpass' ) {
@@ -139,7 +140,10 @@ class improvedUserExperience extends XavisysPlugin {
 		return;
 	}
 
-	public function password_reset( $user, $new_pass ) {
+	public function password_reset( $user = null, $new_pass = null ) {
+		if ( !isset( $user) )
+			$user = check_password_reset_key($_GET['key'], $_GET['login']);
+
 		wp_set_auth_cookie($user->ID);
 		if ( stristr($this->_settings['iue']['change_pw_page'], 'message=resetpass') === false ) {
 			$this->_settings['iue']['change_pw_page'] .= ( strpos($this->_settings['iue']['change_pw_page'], '?') === false )? '?':'&';
