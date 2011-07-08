@@ -3,7 +3,7 @@
  * Plugin Name: Improved User Experience
  * Plugin URI: http://xavisys.com/wordpress-plugins/improved-user-experience/
  * Description: Better lost password handling as well as control over what contact information in the user profiles
- * Version: 1.1.1
+ * Version: 1.1.2
  * Author: Aaron D. Campbell
  * Author URI: http://xavisys.com/
  * Text Domain: improved-user-experience
@@ -141,7 +141,7 @@ class improvedUserExperience extends XavisysPlugin {
 	}
 
 	public function password_reset( $user = null, $new_pass = null ) {
-		if ( !isset( $user) )
+		if ( empty( $user) )
 			$user = check_password_reset_key($_GET['key'], $_GET['login']);
 
 		wp_set_auth_cookie($user->ID);
